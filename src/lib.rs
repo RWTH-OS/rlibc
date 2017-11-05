@@ -54,7 +54,7 @@ pub unsafe extern fn memcpy(dest: *mut u8, src: *const u8,
 	let mut _k: usize;
 
 	asm!(
-		"cld; rep movsq; movq $4, %rcx; andq $$7, %rcx; rep movsb\n\t"
+		"cld; rep movsq; movq $4, %rcx; andq $$7, %rcx; rep movsb"
 		: "={rcx}"(_i), "={rdx}"(_j), "={rsi}"(_k)
 		: "0"(n/8), "r"(n), "1"(dest), "2"(src) : "memory","cc");
 
@@ -96,12 +96,14 @@ pub unsafe extern fn memmove(dest: *mut u8, src: *const u8,
 			asm!(
 				"std; rep movsq; movq $4, %rcx; andq $$7, %rcx; rep movsb; cld"
 				: "={rcx}"(_i), "={rdx}"(_j), "={rsi}"(_k)
-				: "0"(n/8), "r"(n), "1"(dest.offset((n-8) as isize)), "2"(src.offset((n-8) as isize)) : "memory","cc");
+				: "0"(n/8), "r"(n), "1"(dest.offset((n-8) as isize)), "2"(src.offset((n-8) as isize))
+				: "memory","cc");
 		} else if n > 0 {
 			asm!(
 				"std; rep movsb; cld"
 				: "={rcx}"(_i), "={rdx}"(_j), "={rsi}"(_k)
-				: "0"(n), "1"(dest.offset((n-1) as isize)), "2"(src.offset((n-1) as isize)) : "memory","cc");
+				: "0"(n), "1"(dest.offset((n-1) as isize)), "2"(src.offset((n-1) as isize))
+				: "memory","cc");
 		}
     } else if n > 0 { // copy from beginning
 		asm!(
@@ -137,7 +139,7 @@ pub unsafe extern fn memset(s: *mut u8, c: i32, n: usize) -> *mut u8 {
 			: "rax"(c), "1"(s), "0"(n) : "memory","cc" : "volatile");
 	} else {
 		asm!(
-			"cld; rep stosq; movq $5, %rcx; andq $$7, %rcx; rep stosb\n\t"
+			"cld; rep stosq; movq $5, %rcx; andq $$7, %rcx; rep stosb"
 			: "={rcx}"(_i), "={rdi}"(_j)
 			: "rax"(0x00), "1"(s), "0"(n/8), "r"(n): "memory","cc" : "volatile");
 	}
